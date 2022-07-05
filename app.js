@@ -28,43 +28,52 @@ const calculate = (total) => {
     if (calcList.length === 1) {
         return parseInt(calcList[0])
     }
-    let final = operate(calcList[1], parseFloat(calcList[1]), parseFloat(calcList[2]))
-    while (calcList.length > 3) {
-        final = operate(calcList[1], parseFloat(final), parsFloat(calcList[2]))
-
-        curIndex += 3
+    
+    let final = operate(calcList[1], parseFloat(calcList[0]), parseFloat(calcList[2]))
+    calcList = calcList.slice(3);
+    while (calcList.length >= 2) {
+        final = operate(calcList[0], parseFloat(final), parseFloat(calcList[1]))
+        calcList = calcList.slice(2);
     }
-    return +final;
+    return +(final.toFixed(5));
 }
 
 const handleAnswer = (e) => {
     const button = document.querySelector(`button#${e.target.id}`)
+    const label = document.querySelector('.display')
+    label.innerText =     calculate(totalEquation)
+    totalEquation = label.innerText
 
-    calculate(button.innerText)
 }
 const handleOperations = (e) => {
     const operationList = document.querySelectorAll('.operator');
     const button = document.querySelector(`button#${e.target.id}`)
     const equalsButton = document.querySelector('#equals');
     equalsButton.disabled = true;
-    totalEquation += ` ${button.innerText} `
+    if (button.innerText === '.') {
+        totalEquation += `${button.innerText}`
+
+    }
+    else {
+        totalEquation += ` ${button.innerText} `
+    }
     const label = document.querySelector('.display')
     label.innerText = totalEquation
     operationList.forEach( (operation) => operation.disabled = true)
-    console.log(operationList)
 
 }
 const handleNumbers = (e) => {
     const operationList = document.querySelectorAll('.operator');
     operationList.forEach( (operation) => operation.disabled = false)
+    if (totalEquation.includes('.')) {
+        const decimal = document.querySelector('.operator#decimal')
+        decimal.disabled = true
+    }
     const clearButton = document.querySelector('#equals');
     clearButton.disabled = false;
-    console.log(e)
     const button = document.querySelector(`button#${e.target.id}`)
-    console.log(button)
     totalEquation += button.innerText
     const label = document.querySelector('.display')
-    console.log(label)
     label.innerText = totalEquation
 }
 
@@ -79,13 +88,11 @@ const operators = document.querySelectorAll('.operator');
 operators.forEach( operator => operator.addEventListener( 'click', handleOperations))
 operators.forEach( (operation) => operation.disabled = true)
 
-console.log(operators);
 
 
 const numbers = document.querySelectorAll('.number');
 numbers.forEach( operator => operator.addEventListener( 'click', handleNumbers))
 
-console.log(numbers);
 
 const clearButton = document.querySelector('#clear');
 clearButton.addEventListener('click', handleClear)
