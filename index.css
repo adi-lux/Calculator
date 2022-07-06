@@ -36,6 +36,7 @@ body {
   color: #00227e;
   border: 10px solid #531553;
   border-radius: 25px;
+  overflow: hidden;
 }
 
 .buttons {
